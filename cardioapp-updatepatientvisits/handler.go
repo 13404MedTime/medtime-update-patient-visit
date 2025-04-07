@@ -416,3 +416,22 @@ func GetSingleObject(url, tableSlug, appId, guid string) (ClientApiResponse, err
 	}
 	return getSingleObject, nil, response
 }
+
+func CreateObject(url, tableSlug, appId string, request Request) (Datas, error, Response) {
+	response := Response{}
+
+	var createdObject Datas
+	createObjectResponseInByte, err := DoRequest(url+"/v1/object/"+tableSlug+"?from-ofs=true&project-id=a4dc1f1c-d20f-4c1a-abf5-b819076604bc", "POST", request, appId)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while creating object"}
+		response.Status = "error"
+		return Datas{}, errors.New("error"), response
+	}
+	err = json.Unmarshal(createObjectResponseInByte, &createdObject)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while unmarshalling create object object"}
+		response.Status = "error"
+		return Datas{}, errors.New("error"), response
+	}
+	return createdObject, nil, response
+}
