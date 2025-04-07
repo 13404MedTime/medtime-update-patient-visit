@@ -435,3 +435,35 @@ func CreateObject(url, tableSlug, appId string, request Request) (Datas, error, 
 	}
 	return createdObject, nil, response
 }
+
+func UpdateObject(url, tableSlug, appId string, request Request) (error, Response) {
+	response := Response{}
+
+	_, err := DoRequest(url+"/v1/object/"+tableSlug+"?from-ofs=true&project-id=a4dc1f1c-d20f-4c1a-abf5-b819076604bc", "PUT", request, appId)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while updating object"}
+		response.Status = "error"
+		return errors.New("error"), response
+	}
+	return nil, response
+}
+
+func DeleteObject(url, tableSlug, appId, guid string) (error, Response) {
+	response := Response{}
+
+	body, err := DoRequest(url+"/v1/object/"+tableSlug+"/"+guid+"?project-id=a4dc1f1c-d20f-4c1a-abf5-b819076604bc", "DELETE", Request{
+		map[string]interface{}{"app_id": appId},
+	}, appId)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while deleting object", "body": body}
+		response.Status = "error"
+		return errors.New("error"), response
+	}
+	return nil, response
+}
+
+// func main() {
+// 	body := `{"data":{"additional_parameters":[],"app_id":"P-JV2nVIRUtgyPO5xRNeYll2mT4F5QG4bS","method":"DELETE","object_data":{"id":"47b76763-af42-447c-a97c-255c00ae7324"},"object_ids":["47b76763-af42-447c-a97c-255c00ae7324"],"table_slug":"naznachenie","user_id":"c384727f-408a-4dd0-b242-db3cc9355edd"}}`
+
+// 	fmt.Println(Handle([]byte(body)))
+// }
