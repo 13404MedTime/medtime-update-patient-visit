@@ -397,3 +397,22 @@ func GetListObject(url, tableSlug, appId string, request Request) (GetListClient
 	}
 	return getListObject, nil, response
 }
+
+func GetSingleObject(url, tableSlug, appId, guid string) (ClientApiResponse, error, Response) {
+	response := Response{}
+
+	var getSingleObject ClientApiResponse
+	getSingleResponseInByte, err := DoRequest(url+"/v1/object/"+tableSlug+"/"+guid+"?from-ofs=true&project-id=a4dc1f1c-d20f-4c1a-abf5-b819076604bc", "GET", nil, appId)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while getting single object"}
+		response.Status = "error"
+		return ClientApiResponse{}, errors.New("error"), response
+	}
+	err = json.Unmarshal(getSingleResponseInByte, &getSingleObject)
+	if err != nil {
+		response.Data = map[string]interface{}{"message": "Error while unmarshalling single object"}
+		response.Status = "error"
+		return ClientApiResponse{}, errors.New("error"), response
+	}
+	return getSingleObject, nil, response
+}
