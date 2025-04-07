@@ -1,0 +1,15 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: https://ofs.u-code.io
+functions:
+  cardioapp-updatepatientvisits:
+    lang: go
+    handler: ./cardioapp-updatepatientvisits
+    image: gitlab.udevs.io:5050/ucode_functions_group/cardioapp-updatepatientvisits/cardioapp-updatepatientvisits:latest  
+    constraints:
+    - "workload=openfaas-fn"
+    limits:
+      memory: 300Mi
+    requests:
+      memory: 5Mi
